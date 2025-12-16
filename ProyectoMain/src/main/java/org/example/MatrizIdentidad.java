@@ -1,97 +1,101 @@
 package org.example;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class MatrizIdentidad {
-    static void main() {
+
+    static void main(String[] args) {
         Scanner teclado = new Scanner(System.in);
 
-        boolean repetir = true;
-        boolean verificar = true;
-        int dimensiones = 0;
+        System.out.println("Bienvenido a la matriz identidad.");
 
-        System.out.println("Bienvenido a la matriz identidad\nDame la dimensión de la matriz");
-        do {
-            try{
-                dimensiones = teclado.nextInt();
-            }catch (Exception Err){
-                repetir = false;
+        while (true) {
+            int dimensiones = verificardimension(teclado);
+
+            if (dimensiones == 0) {
+                return;
             }
 
-            if (dimensiones > 1 && dimensiones <= 50){
-                repetir = true;
-            }else {
-                System.out.println("El valor de la dimensión de la matriz debe de ser un número entre 2 y 50, vuelve a introducir la dimensión.");
-            }
-            teclado.nextLine();
-        }while (!repetir);
+            int[][] matriz = hacermatriz(teclado, dimensiones);
+            boolean verificar = comprobarindentidad(matriz);
 
-
-        int matriz [] [] = new int[dimensiones][dimensiones];
-        System.out.println("Rellena la matriz " + dimensiones + "x" + dimensiones);
-        // dimensiona maxima de matriz es 50, y minimo 2
-        // elementos que forman una matriz, entre -1000 y 1000 ambos incluidos
-        // solicitar
-
-        for (int i = 0; i < dimensiones; i++) {
-            for (int j = 0; j < dimensiones; j++) {
-                matriz [i] [j] = teclado.nextInt();
-
-            }
+            resultado(verificar);
         }
+    }
+
+
+    public static int verificardimension(Scanner teclado) {
+        int dimensiones = 0;
+        boolean repetir;
+
+        do {
+            repetir = false;
+            System.out.println("Dame la dimensión de la matriz.");
+
+            try {
+                dimensiones = teclado.nextInt();
+
+                if (dimensiones == 0) {
+                    return 0;
+                }
+
+                if (dimensiones < 2 || dimensiones > 50) {
+                    System.out.println(
+                            "El valor de la dimensión debe estar entre 2 y 50.");
+                    repetir = true;
+                }
+
+            } catch (Exception Err) {
+                System.out.println("ERROR, introduce un número.");
+                repetir = true;
+                teclado.nextLine();
+            }
+
+        } while (repetir);
+
+        return dimensiones;
+    }
+
+
+    public static int[][] hacermatriz(Scanner teclado, int dimensiones) {
+        int[][] matriz = new int[dimensiones][dimensiones];
+
+        System.out.println("Rellena la matriz " + dimensiones + "x" + dimensiones);
 
         for (int i = 0; i < dimensiones; i++) {
             for (int j = 0; j < dimensiones; j++) {
-                if (i == j) {
-                    if (matriz[i][j] != 1) {
-                        verificar = false;
-                    }
-                } else {
-                    if (matriz[i][j] != 0) {
-                        verificar = false;
-                    }
+                try {
+                    matriz[i][j] = teclado.nextInt();
+                } catch (Exception Err) {
+                    System.out.println("Debes introducir valores numéricos.");
+                    teclado.nextLine();
+                    j--;
                 }
             }
         }
+        return matriz;
+    }
+
+    public static boolean comprobarindentidad(int[][] matriz) {
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz.length; j++) {
+                if (i == j && matriz[i][j] != 1) {
+                    return false;
+                }
+                if (i != j && matriz[i][j] != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+    public static void resultado(boolean verificar) {
         if (verificar) {
             System.out.println("SI");
         } else {
             System.out.println("NO");
-        }
-
-        for (int columnas []: matriz){
-            for (int filas: columnas){
-                System.out.print(filas + " ");
-            }
-            System.out.println();
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        for (int i = 0; i < dimensiones; i++) {
-//            for (int j = 0; j < matriz[i].length; j++) {
-//                matriz[i] [j] = 0;
-//
-//            }
-//        }
-        for (int columnas []: matriz){
-            for (int filas: columnas){
-                System.out.print(filas + " ");
-            }
-            System.out.println();
         }
     }
 }
